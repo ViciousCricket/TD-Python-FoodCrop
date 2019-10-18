@@ -8,6 +8,16 @@ class Describable(ABC):
 
 class FoodCropFactory :
     def __init__(self):
+    def createVolume() -> Unit:
+    def createPrice() -> Unit:
+    def createWeight() -> Unit:
+    def createSurface() -> Unit:
+    def createCount() -> Unit:
+    def createRatio() -> Unit:
+    def createUnitRatio() -> Unit:
+    def createCommodity() -> Commodity:
+    def createIndicator() -> Indicator:
+    
     
 class FoodCropsDataset :
     def __init__(self):
