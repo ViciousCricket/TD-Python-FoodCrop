@@ -28,7 +28,11 @@ class FoodCropsDataset :
     def findMeasurements(self,commodityType: CommodityType = nil,indicatorGroup: IndicatorGroup = nil,geographicalLocation: str = nil,unit: Unit = nil) -> List[Measurement]:
 
 class Measurement :
-    def __init__(self):
+    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, type: MeasurementType, commodity: Commodity, indicator: Indicator):
+        self.__year=year
+        self.__value=value
+        self.__timeperiodld=timeperiodld
+        self.__timeperiodDesc=timeperiodDesc
 
 class Commodity(Describable) :
     def __init__(self, id : int, name : str, group : CommodityGroup):
@@ -42,8 +46,11 @@ class Indicator(Describable) :
         self.__frequency = frequency
         self.__frequencyDesc = frequencyDesc
         self.__geogLocation = geogLocation
+
 class MeasurementType :
-    def __init__(self):       
+    def __init__(self, id: int, description: str):
+        self.id=id
+        self.description=description     
 
 class Unit(ABC):
     def __init__(self, id: int, name: str):
@@ -82,7 +89,7 @@ class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
         super().__init__()
         
- class IndicatorGroup(Enum):
+class IndicatorGroup(Enum):
     EXPORTS_AND_IMPORTS = "exports and imports"
     SUPPLY_AND_USE = "supply and use"
     PRICES = "prices"
