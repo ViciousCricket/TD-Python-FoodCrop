@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from enum import Enum
 
 class Describable(ABC):
     def __init__(self):
@@ -29,12 +30,18 @@ class FoodCropsDataset :
 class Measurement :
     def __init__(self):
 
-class Commodity :
-    def __init__(self):
-    
-class Indicator :
-    def __init__(self):
-
+class Commodity(Describable) :
+    def __init__(self, id : int, name : str, group : CommodityGroup):
+        seld.id = id
+        self.__name = name
+        
+        
+class Indicator(Describable) :
+    def __init__(self, id :str, frequency : int, frequencyDesc : str, geogLocation : str, indicatorGroup : IndicatorGroup, unit : Unit):
+        self.id = id
+        self.__frequency = frequency
+        self.__frequencyDesc = frequencyDesc
+        self.__geogLocation = geogLocation
 class MeasurementType :
     def __init__(self):       
 
@@ -74,3 +81,26 @@ class Ratio(Unit):
 class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
         super().__init__()
+        
+ class IndicatorGroup(Enum):
+    EXPORTS_AND_IMPORTS = "exports and imports"
+    SUPPLY_AND_USE = "supply and use"
+    PRICES = "prices"
+    FEED_PRICE_RATIOS = "feed price ratios"
+    QUANTITIES_FED = "quantities fed"
+    TRANSPORTATION = "transportation"
+    ANIMAL_UNIT_INDEXES = "animal unit indexes"
+    
+class CommodityGroup(Enum):
+    CORN = "corn"
+    BARLEY = "barley"
+    OATS = "oats"
+    SORGHUM = "sorghum"
+    BYPRODUCT_FEEDS ="byproduct feeds"
+    COARSE_GRAINS = "coarse grains"
+    HAY = "hay"
+    ANIMAL_PROTEIN_FEEDS = "animal protein feeds"
+    GRAIN_PROTEIN_FEEDS = "grain protein feeds"
+    PROCESSED_FEEDS = "processed feeds"
+    ENERGY_FEEDS = "energy feeds"
+    OTHER = "other"
