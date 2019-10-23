@@ -5,9 +5,9 @@ from typing import List
 class Describable(ABC):
     def __init__(self):
         super().__init__()
-        @abstractmethod
-        def Describe(self) -> Str :
-            pass
+    @abstractmethod
+    def Describe(self) -> str :
+        pass
 
 class IndicatorGroup(Enum):
     EXPORTS_AND_IMPORTS = "exports and imports"
