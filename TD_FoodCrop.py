@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
+import pandas
+
 
 class Describable(ABC):
     def __init__(self):
@@ -62,13 +64,7 @@ class Measurement :
         self.__timeperiodld=timeperiodld
         self.__timeperiodDesc=timeperiodDesc
 
-
-
-
-
-        
-
-    
+   
 class FoodCropsDataset :
     def __init__(self):
         pass
@@ -79,11 +75,11 @@ class FoodCropsDataset :
 
 
 class Volume(Unit):
-    def __init__(self, id:int, name:str = "Volume"):
+    def __init__(self, id:int, name:str):
         super().__init__(id, "Volume")
         
 class Surface(Unit):
-    def __init__(self, id:int, name:str = "Surface"):
+    def __init__(self, id:int, name:str):
         super().__init__(id, "Surface")
         self.__name = name
 
@@ -108,10 +104,7 @@ class Ratio(Unit):
 class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
         super().__init__(id)
-
-    
-
-    
+   
 class FoodCropFactory :
     def __init__(self):
         pass
