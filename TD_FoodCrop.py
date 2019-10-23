@@ -17,7 +17,7 @@ class FoodCropFactory :
     def createRatio(self,ID: int) -> Unit:
     def createUnitRatio(self,ID: int,unit1: Unit,unit2: Unit) -> Unit:
     def createCommodity(self,group: CommodityGroup, ID: int, name: str) -> Commodity:
-    def createIndicator(self,ID: int frequency: int, freqDesc: str,geogLocation: str,indicatorGroup: IndicatorGroup,unit: Unit) -> Indicator:
+    def createIndicator(self,ID: int, frequency: int, freqDesc: str,geogLocation: str,indicatorGroup: IndicatorGroup,unit: Unit) -> Indicator:
     def createMeasurementType(self,ID: int,description: str) -> MeasurementType:
     def createMeasurement(self,ID: int,year: int,value: float,timeperiodId: int,timeperiodDesc: str,tipe: MeasurementType,commodity: Commodity,indicator: Indicator) -> Measurement:
     
