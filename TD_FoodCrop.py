@@ -1,15 +1,15 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 from typing import List
-import pandas
-
+import pandas as pd
 
 class Describable(ABC):
     def __init__(self):
         super().__init__()
+    
     @abstractmethod
     def Describe(self) -> str :
-        pass
+            pass
 
 class IndicatorGroup(Enum):
     EXPORTS_AND_IMPORTS = "exports and imports"
@@ -64,22 +64,40 @@ class Measurement :
         self.__timeperiodld=timeperiodld
         self.__timeperiodDesc=timeperiodDesc
 
-   
+
+
+
+
+        
+
+    
 class FoodCropsDataset :
+    
     def __init__(self):
         pass
+    
+    
     def load(self,datasetPath: str):
-        pass
+        dataframe = pd.read_csv(datasetPath)
+        for index, row in dataframe.iterrows():
+            column_value = row["SC_Commodity_ID"]
+            create
+                
+            
+                
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         pass
 
+FCD = FoodCropsDataset()
+FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
+
 
 class Volume(Unit):
-    def __init__(self, id:int, name:str):
+    def __init__(self, id:int, name:str = "Volume"):
         super().__init__(id, "Volume")
         
 class Surface(Unit):
-    def __init__(self, id:int, name:str):
+    def __init__(self, id:int, name:str = "Surface"):
         super().__init__(id, "Surface")
         self.__name = name
 
@@ -104,8 +122,14 @@ class Ratio(Unit):
 class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
         super().__init__(id)
-   
+
+    
+
+    
 class FoodCropFactory :
+    
+    commodityRegistry = dict()
+    
     def __init__(self):
         pass
     def createVolume(self,ID: int) -> Unit:
