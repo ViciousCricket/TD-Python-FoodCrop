@@ -91,8 +91,6 @@ class UnitRatio(Ratio):
         super().__init__(id)
 
     
-
-    
 class FoodCropFactory :
     
     commodityRegistry = dict()
