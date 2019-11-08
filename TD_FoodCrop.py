@@ -189,4 +189,4 @@ class FoodCropFactory :
         if ID in self.measurementsTypeRegistry.keys():
             return self.measurementsTypeRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Measurement(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
+            self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, tipe, commodity, indicator)
