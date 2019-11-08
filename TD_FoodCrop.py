@@ -131,45 +131,45 @@ class FoodCropFactory :
         self.measurementsTypeRegistry = dict()
         
     def createVolume(self,ID: int) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Volume(ID)
+            self.unitsRegistry[ID] = Volume(ID)
 
 
     def createWeight(self,ID: int, weight:float) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Weight(ID, weight)
+            self.unitsRegistry[ID] = Weight(ID, weight)
             
             
     def createSurface(self, ID:int) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Surface(ID)
+            self.unitsRegistry[ID] = Surface(ID)
             
             
     def createCount(self, ID:int, what:str) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Count(ID,what)
+            self.unitsRegistry[ID] = Count(ID,what)
     
     
     def createRatio(self, ID:int) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Ratio(ID)
+            self.unitsRegistry[ID] = Ratio(ID)
     
     
     def createUnitRatio(self, ID:int, unit1:Unit, unit2:Unit) -> Unit:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = UnitRatio(ID, unit1, unit2)
+            self.unitsRegistry[ID] = UnitRatio(ID, unit1, unit2)
     
     def createCommodity(self, group:CommodityGroup, ID:int, name:str) -> Commodity:
         if ID in self.commodityRegistry.keys():
@@ -178,9 +178,15 @@ class FoodCropFactory :
             self.commodityRegistry[ID] = Commodity(ID, name, group)
 
 
-    def createIndicator(self,ID: int, frequency:int, freqDesc: str,geogLocation: str,indicatorGroup: IndicatorGroup,unit: Unit) -> Indicator:
-        pass
-    def createMeasurementType(self,ID: int,description: str) -> MeasurementType:
-        pass
-    def createMeasurement(self,ID: int,year: int,value: float,timeperiodId: int,timeperiodDesc: str,tipe: MeasurementType,commodity: Commodity,indicator: Indicator) -> Measurement:
-        pass
+    def createIndicator(self, ID:int, frequency:int, freqDesc:str, geogLocation:str, indicatorGroup:IndicatorGroup, unit:Unit) -> Indicator:
+        if ID in self.indicatorsregistry.keys():
+            return self.indicatorsregistry[ID]
+        else:
+            self.indicatorsregistry[ID] = indicatorsregistry(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
+
+
+    def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, tipe:MeasurementType, commodity:Commodity, indicator:Indicator) -> Measurement:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Measurement(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
