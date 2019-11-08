@@ -88,7 +88,7 @@ class Ratio(Unit):
             
 class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
-        super().__init__(id)
+        super().__init__(id, "UnitRatio")
 
     
 class FoodCropFactory :
