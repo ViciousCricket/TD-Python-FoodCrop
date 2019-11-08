@@ -60,34 +60,6 @@ class Measurement :
         self.__timeperiodDesc=timeperiodDesc
 
 
-
-
-
-        
-
-    
-class FoodCropsDataset :
-    
-    def __init__(self):
-        pass
-    
-    
-    def load(self,datasetPath: str):
-        dataframe = pd.read_csv(datasetPath)
-        for index, row in dataframe.iterrows():
-            column_value = row["SC_Commodity_ID"]
-            create 
-                
-            
-                
-    def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
-        pass
-
-
-FCD = FoodCropsDataset()
-FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
-
-
 class Volume(Unit):
     def __init__(self, id:int):
         super().__init__(id, "Volume")
@@ -191,3 +163,31 @@ class FoodCropFactory :
             return self.measurementsTypeRegistry[ID]
         else:
             self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
+
+
+        
+
+    
+class FoodCropsDataset :
+    
+    def __init__(self):
+        pass
+    
+    
+    def load(self,datasetPath: str):
+        dataframe = pd.read_csv(datasetPath)
+        for index, row in dataframe.iterrows():
+            column_value = row["SC_Commodity_ID"]
+            create 
+                
+            
+                
+    def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
+        pass
+
+
+FCD = FoodCropsDataset()
+FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
+
+
+
