@@ -38,11 +38,6 @@ class Commodity(Describable) :
     def __init__(self, id : int, name : str, group : CommodityGroup):
         self.id = id
         self.__name = name
-        
-class MeasurementType :
-    def __init__(self, id: int, description: str):
-        self.id=id
-        self.description=description
     
 class Unit(ABC):
     def __init__(self, id: int, name: str):
