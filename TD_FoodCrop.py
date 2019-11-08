@@ -53,7 +53,7 @@ class Indicator(Describable) :
         self.__geogLocation = geogLocation
 
 class Measurement :
-    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, type: MeasurementType, commodity: Commodity, indicator: Indicator):
+    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, commodity: Commodity, indicator: Indicator):
         self.__year=year
         self.__value=value
         self.__timeperiodld=timeperiodld
@@ -82,6 +82,7 @@ class FoodCropsDataset :
                 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         pass
+
 
 FCD = FoodCropsDataset()
 FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
@@ -185,8 +186,8 @@ class FoodCropFactory :
             self.indicatorsregistry[ID] = indicatorsregistry(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
 
 
-    def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, tipe:MeasurementType, commodity:Commodity, indicator:Indicator) -> Measurement:
+    def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, commodity:Commodity, indicator:Indicator) -> Measurement:
         if ID in self.measurementsTypeRegistry.keys():
             return self.measurementsTypeRegistry[ID]
         else:
-            self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, tipe, commodity, indicator)
+            self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
