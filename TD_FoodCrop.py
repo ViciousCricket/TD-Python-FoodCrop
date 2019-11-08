@@ -76,7 +76,7 @@ class FoodCropsDataset :
         dataframe = pd.read_csv(datasetPath)
         for index, row in dataframe.iterrows():
             column_value = row["SC_Commodity_ID"]
-            create
+            create 
                 
             
                 
@@ -88,30 +88,29 @@ FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\pyt
 
 
 class Volume(Unit):
-    def __init__(self, id:int, name:str = "Volume"):
+    def __init__(self, id:int):
         super().__init__(id, "Volume")
         
 class Surface(Unit):
-    def __init__(self, id:int, name:str = "Surface"):
+    def __init__(self, id:int):
         super().__init__(id, "Surface")
-        self.__name = name
 
 class Price(Unit):
-    def __init__(self, id:int, name:str):
-        super().__init__(id,name)
+    def __init__(self, id:int):
+        super().__init__(id,"Price)
 
 class Weight(Unit):
-    def __init__(self, id:int, name:str, multiplier:float):
-        super().__init__(id,"Weight")
+    def __init__(self, id:int, multiplier:float):
+        super().__init__(id, "Weight")
         self.__multiplier = multiplier
             
 class Count(Unit):
-    def __init__(self, id:int, name:str, what:str):
+    def __init__(self, id:int, what:str):
         super().__init__(id,"Count")
         self.__what = what
             
 class Ratio(Unit):
-    def __init__(self, id:int, name:str):
+    def __init__(self, id:int):
         super().__init__(id,"Ratio")
             
 class UnitRatio(Ratio):
@@ -125,24 +124,60 @@ class FoodCropFactory :
     
     commodityRegistry = dict()
     
-    def __init__(self):
-        pass
+        def __init__(self):
+        self.commodityRegistry = dict()
+        self.indicatorsregistry = dict()
+        self.unitsRegistry = dict()
+        self.measurementsTypeRegistry = dict()
+        
     def createVolume(self,ID: int) -> Unit:
-        pass
-    def createPrice(self,ID: int) -> Unit:
-        pass
-    def createWeight(self,ID: int,weight : float) -> Unit:
-        pass
-    def createSurface(self,ID: int) -> Unit:
-        pass
-    def createCount(self,ID: int,what: str) -> Unit:
-        pass
-    def createRatio(self,ID: int) -> Unit:
-        pass
-    def createUnitRatio(self,ID: int,unit1: Unit,unit2: Unit) -> Unit:
-        pass
-    def createCommodity(self,group: CommodityGroup, ID: int, name: str) -> Commodity:
-        pass
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Volume(ID)
+
+
+    def createWeight(self,ID: int, weight:float) -> Unit:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Weight(ID, weight)
+            
+            
+    def createSurface(self, ID:int) -> Unit:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Surface(ID)
+            
+            
+    def createCount(self, ID:int, what:str) -> Unit:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Count(ID,what)
+    
+    
+    def createRatio(self, ID:int) -> Unit:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = Ratio(ID)
+    
+    
+    def createUnitRatio(self, ID:int, unit1:Unit, unit2:Unit) -> Unit:
+        if ID in self.measurementsTypeRegistry.keys():
+            return self.measurementsTypeRegistry[ID]
+        else:
+            self.measurementsTypeRegistry[ID] = UnitRatio(ID, unit1, unit2)
+    
+    def createCommodity(self, group:CommodityGroup, ID:int, name:str) -> Commodity:
+        if ID in self.commodityRegistry.keys():
+            return self.commodityRegistry[ID]
+        else:
+            self.commodityRegistry[ID] = Commodity(ID, name, group)
+
+
     def createIndicator(self,ID: int, frequency:int, freqDesc: str,geogLocation: str,indicatorGroup: IndicatorGroup,unit: Unit) -> Indicator:
         pass
     def createMeasurementType(self,ID: int,description: str) -> MeasurementType:
