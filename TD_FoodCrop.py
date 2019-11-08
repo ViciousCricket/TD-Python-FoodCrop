@@ -106,6 +106,7 @@ class FoodCropFactory :
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = Volume(ID)
+            return self.unitsRegistry[ID]
 
 
     def createWeight(self,ID: int, weight:float) -> Unit:
@@ -113,40 +114,42 @@ class FoodCropFactory :
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = Weight(ID, weight)
-            
+            return self.unitsRegistry[ID]
             
     def createSurface(self, ID:int) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = Surface(ID)
-            
+            return self.unitsRegistry[ID]
             
     def createCount(self, ID:int, what:str) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = Count(ID,what)
-    
+            return self.unitsRegistry[ID]
     
     def createRatio(self, ID:int) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = Ratio(ID)
-    
+            return self.unitsRegistry[ID]
     
     def createUnitRatio(self, ID:int, unit1:Unit, unit2:Unit) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
         else:
             self.unitsRegistry[ID] = UnitRatio(ID, unit1, unit2)
+            return self.unitsRegistry[ID]
     
     def createCommodity(self, group:CommodityGroup, ID:int, name:str) -> Commodity:
         if ID in self.commodityRegistry.keys():
             return self.commodityRegistry[ID]
         else:
             self.commodityRegistry[ID] = Commodity(ID, name, group)
+            return self.commodityRegistry[ID]
 
 
     def createIndicator(self, ID:int, frequency:int, freqDesc:str, geogLocation:str, indicatorGroup:IndicatorGroup, unit:Unit) -> Indicator:
@@ -154,14 +157,14 @@ class FoodCropFactory :
             return self.indicatorsregistry[ID]
         else:
             self.indicatorsregistry[ID] = indicatorsregistry(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
-
+            return self.indicatorsregistry[ID]
 
     def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, commodity:Commodity, indicator:Indicator) -> Measurement:
         if ID in self.measurementsTypeRegistry.keys():
             return self.measurementsTypeRegistry[ID]
         else:
             self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
-
+            return self.measurementsTypeRegistry[ID]
 
         
 
