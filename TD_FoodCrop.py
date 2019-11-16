@@ -12,32 +12,33 @@ class Describable(ABC):
             pass
 
 class IndicatorGroup(Enum):
-    EXPORTS_AND_IMPORTS = "exports and imports"
-    SUPPLY_AND_USE = "supply and use"
-    PRICES = "prices"
-    FEED_PRICE_RATIOS = "feed price ratios"
-    QUANTITIES_FED = "quantities fed"
-    TRANSPORTATION = "transportation"
-    ANIMAL_UNIT_INDEXES = "animal unit indexes"
+    EXPORTS_AND_IMPORTS = "Exports and imports"
+    SUPPLY_AND_USE = "Supply and use"
+    PRICES = "Prices"
+    FEED_PRICE_RATIOS = "Feed price ratios"
+    QUANTITIES_FED = "Quantities fed"
+    TRANSPORTATION = "Transportation"
+    ANIMAL_UNIT_INDEXES = "Animal unit indexes"
     
 class CommodityGroup(Enum):
-    CORN = "corn"
-    BARLEY = "barley"
-    OATS = "oats"
-    SORGHUM = "sorghum"
-    BYPRODUCT_FEEDS ="byproduct feeds"
-    COARSE_GRAINS = "coarse grains"
-    HAY = "hay"
-    ANIMAL_PROTEIN_FEEDS = "animal protein feeds"
-    GRAIN_PROTEIN_FEEDS = "grain protein feeds"
-    PROCESSED_FEEDS = "processed feeds"
-    ENERGY_FEEDS = "energy feeds"
-    OTHER = "other"
+    CORN = "Corn"
+    BARLEY = "Barley"
+    OATS = "Oats"
+    SORGHUM = "Sorghum"
+    BYPRODUCT_FEEDS ="Byproduct feeds"
+    COARSE_GRAINS = "Coarse grains"
+    HAY = "Hay"
+    ANIMAL_PROTEIN_FEEDS = "Animal protein feeds"
+    GRAIN_PROTEIN_FEEDS = "Grain protein feeds"
+    PROCESSED_FEEDS = "Processed feeds"
+    ENERGY_FEEDS = "Energy feeds"
+    OTHER = "Other"
 
 class Commodity(Describable) :
     def __init__(self, id : int, name : str, group : CommodityGroup):
         self.id = id
         self.__name = name
+        
     
 class Unit(ABC):
     def __init__(self, id: int, name: str):
@@ -53,13 +54,12 @@ class Indicator(Describable) :
         self.__geogLocation = geogLocation
 
 class Measurement :
-    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, commodity: Commodity, indicator: Indicator):
+    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, type: MeasurementType, commodity: Commodity, indicator: Indicator):
         self.__year=year
         self.__value=value
         self.__timeperiodld=timeperiodld
         self.__timeperiodDesc=timeperiodDesc
-
-
+        
 class Volume(Unit):
     def __init__(self, id:int):
         super().__init__(id, "Volume")
@@ -90,16 +90,16 @@ class UnitRatio(Ratio):
     def __init__(self, id:int, unit1:Unit, unit2:Unit):
         super().__init__(id, "UnitRatio")
 
-    
+
+
 class FoodCropFactory :
     
     commodityRegistry = dict()
     
-        def __init__(self):
-            self.commodityRegistry = dict()
-            self.indicatorsregistry = dict()
-            self.unitsRegistry = dict()
-            self.measurementsTypeRegistry = dict()
+    def __init__(self):
+        self.commodityRegistry = dict()
+        self.indicatorsregistry = dict()
+        self.unitsRegistry = dict()
         
     def createVolume(self,ID: int) -> Unit:
         if ID in self.unitsRegistry.keys():
@@ -167,27 +167,78 @@ class FoodCropFactory :
             return self.measurementsTypeRegistry[ID]
 
         
+fcf = FoodCropFactory()        
 
-class FoodCropsDataset :
     
+class FoodCropsDataset :
+
     def __init__(self):
         pass
     
-    
     def load(self,datasetPath: str):
         dataframe = pd.read_csv(datasetPath)
+        
+        liste = []
+        price = []
+        volume = ["Million bushels", "Bushels","Gallons","1,000 liters"]
+        weight = ["1,000 metric tons","Million metric tons", "1,000 tons","Ton"]
+        surface = ["Million acres","1,000 acres","1,000 hectare"]
+        count = ["Million animal units","Index (1984=100)","Carloads originated"]
+        ratio = ["Bushels per acre","Metric tons per hectare","Cents per pound","Dollars per cwt","Dollars per short ton","Ratio","Dollars per bushel","Dollars per ton","Tons per acre"]
+        
         for index, row in dataframe.iterrows():
-            column_value = row["SC_Commodity_ID"]
-            create 
+#            name_u = row["SC_Unit_Desc"]
+#            if name_u not in liste :
+#                liste.append(name_u)
+#                print (name_u)
+#        print(liste)
+            
+        
+            id_u = row["SC_Unit_ID"]
+            name_u = row["SC_Unit_Desc"]
+            if name_u in volume :
+                unit = fcf.createVolume(id_u)
+            if name_u in price :
+                unit = fcf.createPrice(id_u)
+            if name_u in weight :
+                unit = fcf.createWeight(id_u, 5)
+            if name_u in surface :
+                unit = fcf.createSurface(id_u)
+            if name_u in count :
+                unit = fcf.createCount(id_u, "d")
+            if name_u in ratio :
+                unit = fcf.createRatio(id_u)
                 
+            
+            
+            id_ind = row["SC_Attribute_ID"]
+            id_freq = row["SC_Frequency_ID"]
+            freq_name = row["SC_Frequency_Desc"]
+            geo_name = row["SC_GeographyIndented_Desc"]
+            id_group_ind = row["SC_Group_ID"]
+            indicator = fcf.createIndicator(id_ind, id_freq, freq_name, geo_name, id_group_ind, unit)
+            
+            name_cg = row["SC_GroupCommod_Desc"]
+            id_c = row["SC_Commodity_ID"]
+            name_c = row["SC_Commodity_Desc"]
+            for a in CommodityGroup :
+                if name_cg == a.value :
+                        commodity = fcf.createCommodity(a, id_c, name_c)
+            
+            year = row["Year_ID"]
+            value = row["Amount"]
+            tp_id = row["Timeperiod_ID"]
+            tp_d = row["Timeperiod_Desc"]
+            fcf.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
+            
             
                 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         pass
 
-
 FCD = FoodCropsDataset()
 FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
 
+    
 
-
+    
