@@ -38,9 +38,11 @@ class Commodity(Describable) :
     def __init__(self, id : int, name : str, group : CommodityGroup):
         self.id = id
         self.__name = name
+        self.__group = group
  
     def Describe(self) -> str :
-        return "s"       
+        res = "nom : "+ self.__name + " commodity group:" + self.__group.value
+        return res     
     
 class Unit(ABC):
     def __init__(self, id: int, name: str):
@@ -49,7 +51,8 @@ class Unit(ABC):
         self.id = id
     
     def Describe(self) -> str :
-        return "s"
+        res = "nom :" + self.name
+        return res
 
 class Indicator(Describable) :
     def __init__(self, id :str, frequency : int, frequencyDesc : str, geogLocation : str, indicatorGroup : IndicatorGroup, unit : Unit):
@@ -57,9 +60,12 @@ class Indicator(Describable) :
         self.__frequency = frequency
         self.__frequencyDesc = frequencyDesc
         self.__geogLocation = geogLocation
+        self.indicatorGroup = indicatorGroup
+        self.unit = unit
     
     def Describe(self) -> str :
-        return "s"
+        res = "nom :" + str(self.indicatorGroup) + " unité :" + self.unit.Describe() + " fréquence :" + str(self.__frequency) + self.__frequencyDesc + " geolocalisation :" + self.__geogLocation
+        return res
 
 class Measurement :
     def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, commodity: Commodity, indicator: Indicator):
@@ -67,9 +73,12 @@ class Measurement :
         self.__value=value
         self.__timeperiodld=timeperiodld
         self.__timeperiodDesc=timeperiodDesc
+        self.indicator = indicator
+        self.commodity = commodity
     
     def Describe(self) -> str :
-        return "s"
+        res = "année : " + str(self.__year) + "\n valeur :" + str(self.__value) + "\n time periode :" + str(self.__timeperiodld) + self.__timeperiodDesc + "\n commodity :" + self.commodity.Describe() + "\n indicator :" + self.indicator.Describe()
+        return res
         
 class Volume(Unit):
     def __init__(self, id:int):
@@ -116,6 +125,7 @@ class FoodCropFactory :
         print(len(self.indicatorsRegistry))
         print(len(self.unitsRegistry))
         print(len(self.measurementsRegistry))
+        print(self.measurementsRegistry[2].Describe())
         
         
     def createVolume(self,ID: int) -> Unit:
@@ -189,8 +199,9 @@ class FoodCropFactory :
     
 class FoodCropsDataset :
 
-    def __init__(self):
-        pass
+    def __init__(self, factory : FoodCropFactory):
+        self.factory = factory
+        
     
     def load(self,datasetPath: str):
         dataframe = pd.read_csv(datasetPath)
@@ -247,6 +258,7 @@ class FoodCropsDataset :
                 if name_cg == a.value :
                         commodity = fcf.createCommodity(a, id_c, name_c)
             
+            
             year = row["Year_ID"]
             value = row["Amount"]
             tp_id = row["Timeperiod_ID"]
@@ -259,8 +271,8 @@ class FoodCropsDataset :
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         pass
         
-fcf = FoodCropFactory()   
-FCD = FoodCropsDataset()
+fcf = FoodCropFactory()
+FCD = FoodCropsDataset(fcf)
 FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
 fcf.affiche()
     
