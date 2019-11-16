@@ -221,7 +221,7 @@ class FoodCropsDataset :
         
         for index, row in dataframe.iterrows():
 
-            name_u = row["SC_GeographyIntended_Desc"]
+            name_u = row["SC_GeographyIndented_Desc"]
             if name_u not in liste :
                 liste.append(name_u)
                 print (name_u)
