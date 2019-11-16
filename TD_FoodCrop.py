@@ -209,9 +209,9 @@ class FoodCropsDataset :
         
     
     def load(self,datasetPath: str):
-        dataframe = pd.read_csv(datasetPath)
         
-        liste = []
+        dataframe = pd.read_csv(datasetPath)
+    
         price = []
         volume = ["Million bushels", "Bushels","Gallons","1,000 liters"]
         weight = ["1,000 metric tons","Million metric tons", "1,000 tons","Ton"]
@@ -221,11 +221,11 @@ class FoodCropsDataset :
         
         for index, row in dataframe.iterrows():
 
-            name_u = row["SC_GeographyIndented_Desc"]
-            if name_u not in liste :
-                liste.append(name_u)
-                print (name_u)
-            print(liste)
+#            name_u = row["SC_GeographyIndented_Desc"]
+#            if name_u not in liste :
+#                liste.append(name_u)
+#                print (name_u)
+#            print(liste)
             
         
             id_u = row["SC_Unit_ID"]
@@ -303,7 +303,8 @@ class FoodCropsDataset :
 fcf = FoodCropFactory()
 FCD = FoodCropsDataset(fcf)
 FCD.load(r"D:\Downloads\FeedGrains\FeedGrains.csv")
-fcf.affiche()
+
     
 
     
+
