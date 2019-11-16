@@ -62,7 +62,7 @@ class Indicator(Describable) :
         return "s"
 
 class Measurement :
-    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, type: MeasurementType, commodity: Commodity, indicator: Indicator):
+    def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, commodity: Commodity, indicator: Indicator):
         self.__year=year
         self.__value=value
         self.__timeperiodld=timeperiodld
@@ -105,8 +105,6 @@ class UnitRatio(Ratio):
 
 class FoodCropFactory :
     
-    commodityRegistry = dict()
-    
     def __init__(self):
         self.commodityRegistry = dict()
         self.indicatorsRegistry = dict()
@@ -120,6 +118,12 @@ class FoodCropFactory :
             self.unitsRegistry[ID] = Volume(ID)
             return self.unitsRegistry[ID]
 
+    def createPrice(self,ID: int) -> Unit:
+        if ID in self.unitsRegistry.keys():
+            return self.unitsRegistry[ID]
+        else:
+            self.unitsRegistry[ID] = Price(ID)
+            return self.unitsRegistry[ID]
 
     def createWeight(self,ID: int, weight:float) -> Unit:
         if ID in self.unitsRegistry.keys():
