@@ -202,8 +202,8 @@ class FoodCropsDataset :
 
     def __init__(self, factory : FoodCropFactory):
         self.factory = factory
-        self.commodityGroupIndex = {"Corn" : [], "Barley" : [], "Oats" : [], "Sorghum" : [], "Byproduct feeds" : [], "Coarse grains" : [], "Hay" : [], "Feed grains" : [], "Animal protein feeds" : [], "Grain protein feeds" : [], "Processed feeds" : [], "Energy feeds" : [], "Other" : []}
-        self.indicatorGroupIndex = {"Exports and imports" : [], "Supply and use" : [], "Prices" : [], "Feed price ratios" : [], "Quantities fed" : [], "Transportation" : [], "Animal unit indexes" : []}
+        self.commodityGroupIndex = dict()
+        self.indicatorGroupIndex = dict()
         self.geographicalLocationIndex = dict()
         self.unitIndex = dict()
         
@@ -255,6 +255,7 @@ class FoodCropsDataset :
             freq_name = row["SC_Frequency_Desc"]
             geo_name = row["SC_GeographyIndented_Desc"]
             id_group_ind = row["SC_Group_ID"]
+            name_ig = row["SC_Group_Desc"]
             indicator = fcf.createIndicator(id_ind, id_freq, freq_name, geo_name, id_group_ind, unit)
             
             name_cg = row["SC_GroupCommod_Desc"]
@@ -276,6 +277,12 @@ class FoodCropsDataset :
 
             if name_u not in self.unitIndex.keys() :
                 self.unitIndex[name_u] = []
+            
+            if name_ig not in self.indicatorGroupIndex.keys() :
+                self.indicatorGroupIndex[name_ig] = []
+            
+            if name_cg not in self.commodityGroupIndex.keys() :
+                self.commodityGroupIndex[name_cg] = []
 
             a = self.unitIndex[name_u]
             self.unitIndex[name_u] = a + [measurement]
@@ -283,11 +290,11 @@ class FoodCropsDataset :
             a = self.geographicalLocationIndex[geo_name]
             self.geographicalLocationIndex[geo_name] = a + [measurement]
 
-            a = self.commodityGroupIndex[name_c]
-            self.commodityGroupIndex = a + [measurement]
+            a = self.commodityGroupIndex[name_cg]
+            self.commodityGroupIndex[name_cg] = a + [measurement]
 
-            a = self.indicatorGroupIndex[id_group_ind]
-            self.indicatorGroupIndex[id_group_ind] = a + [measurement]
+            a = self.indicatorGroupIndex[name_ig]
+            self.indicatorGroupIndex[name_ig] = a + [measurement]
             
                 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
