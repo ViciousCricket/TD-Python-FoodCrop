@@ -28,6 +28,7 @@ class CommodityGroup(Enum):
     BYPRODUCT_FEEDS ="Byproduct feeds"
     COARSE_GRAINS = "Coarse grains"
     HAY = "Hay"
+    FEED_GRAINS = "Feed grains"
     ANIMAL_PROTEIN_FEEDS = "Animal protein feeds"
     GRAIN_PROTEIN_FEEDS = "Grain protein feeds"
     PROCESSED_FEEDS = "Processed feeds"
@@ -201,6 +202,10 @@ class FoodCropsDataset :
 
     def __init__(self, factory : FoodCropFactory):
         self.factory = factory
+        self.commodityGroupIndex = {"Corn" : [], "Barley" : [], "Oats" : [], "Sorghum" : [], "Byproduct feeds" : [], "Coarse grains" : [], "Hay" : [], "Feed grains" : [], "Animal protein feeds" : [], "Grain protein feeds" : [], "Processed feeds" : [], "Energy feeds" : [], "Other" : []}
+        self.indicatorGroupIndex = {"Exports and imports" : [], "Supply and use" : [], "Prices" : [], "Feed price ratios" : [], "Quantities fed" : [], "Transportation" : [], "Animal unit indexes" : []}
+        self.geographicalLocationIndex = dict()
+        self.unitIndex = dict()
         
     
     def load(self,datasetPath: str):
@@ -215,11 +220,12 @@ class FoodCropsDataset :
         ratio = ["Bushels per acre","Metric tons per hectare","Cents per pound","Dollars per cwt","Dollars per short ton","Ratio","Dollars per bushel","Dollars per ton","Tons per acre"]
         
         for index, row in dataframe.iterrows():
-#            name_u = row["SC_Unit_Desc"]
-#            if name_u not in liste :
-#                liste.append(name_u)
-#                print (name_u)
-#        print(liste)
+
+            name_u = row["SC_GeographyIntended_Desc"]
+            if name_u not in liste :
+                liste.append(name_u)
+                print (name_u)
+            print(liste)
             
         
             id_u = row["SC_Unit_ID"]
@@ -263,9 +269,25 @@ class FoodCropsDataset :
             value = row["Amount"]
             tp_id = row["Timeperiod_ID"]
             tp_d = row["Timeperiod_Desc"]
-            fcf.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
-        
+            measurement = fcf.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
+
+            if geo_name not in self.geographicalLocationIndex.keys() :
+                self.geographicalLocationIndex[geo_name] = []
+
+            if name_u not in self.unitIndex.keys() :
+                self.unitIndex[name_u] = []
+
+            a = self.unitIndex[name_u]
+            self.unitIndex[name_u] = a + [measurement]
             
+            a = self.geographicalLocationIndex[geo_name]
+            self.geographicalLocationIndex[geo_name] = a + [measurement]
+
+            a = self.commodityGroupIndex[name_c]
+            self.commodityGroupIndex = a + [measurement]
+
+            a = self.indicatorGroupIndex[id_group_ind]
+            self.indicatorGroupIndex[id_group_ind] = a + [measurement]
             
                 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
@@ -273,7 +295,7 @@ class FoodCropsDataset :
         
 fcf = FoodCropFactory()
 FCD = FoodCropsDataset(fcf)
-FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
+FCD.load(r"D:\Downloads\FeedGrains\FeedGrains.csv")
 fcf.affiche()
     
 
