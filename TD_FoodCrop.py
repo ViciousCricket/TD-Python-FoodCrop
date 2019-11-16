@@ -38,13 +38,18 @@ class Commodity(Describable) :
     def __init__(self, id : int, name : str, group : CommodityGroup):
         self.id = id
         self.__name = name
-        
+ 
+    def Describe(self) -> str :
+        return "s"       
     
 class Unit(ABC):
     def __init__(self, id: int, name: str):
         super().__init__()
         self.name = name
         self.id = id
+    
+    def Describe(self) -> str :
+        return "s"
 
 class Indicator(Describable) :
     def __init__(self, id :str, frequency : int, frequencyDesc : str, geogLocation : str, indicatorGroup : IndicatorGroup, unit : Unit):
@@ -52,6 +57,9 @@ class Indicator(Describable) :
         self.__frequency = frequency
         self.__frequencyDesc = frequencyDesc
         self.__geogLocation = geogLocation
+    
+    def Describe(self) -> str :
+        return "s"
 
 class Measurement :
     def __init__(self, id: int, year: int, value: float, timeperiodld: int, timeperiodDesc: str, type: MeasurementType, commodity: Commodity, indicator: Indicator):
@@ -59,18 +67,21 @@ class Measurement :
         self.__value=value
         self.__timeperiodld=timeperiodld
         self.__timeperiodDesc=timeperiodDesc
+    
+    def Describe(self) -> str :
+        return "s"
         
 class Volume(Unit):
     def __init__(self, id:int):
         super().__init__(id, "Volume")
-        
+    
 class Surface(Unit):
     def __init__(self, id:int):
         super().__init__(id, "Surface")
 
 class Price(Unit):
     def __init__(self, id:int):
-        super().__init__(id,"Price)
+        super().__init__(id,"Price")
 
 class Weight(Unit):
     def __init__(self, id:int, multiplier:float):
@@ -98,8 +109,9 @@ class FoodCropFactory :
     
     def __init__(self):
         self.commodityRegistry = dict()
-        self.indicatorsregistry = dict()
+        self.indicatorsRegistry = dict()
         self.unitsRegistry = dict()
+        self.measurementsRegistry = dict()
         
     def createVolume(self,ID: int) -> Unit:
         if ID in self.unitsRegistry.keys():
@@ -153,18 +165,15 @@ class FoodCropFactory :
 
 
     def createIndicator(self, ID:int, frequency:int, freqDesc:str, geogLocation:str, indicatorGroup:IndicatorGroup, unit:Unit) -> Indicator:
-        if ID in self.indicatorsregistry.keys():
-            return self.indicatorsregistry[ID]
+        if ID in self.indicatorsRegistry.keys():
+            return self.indicatorsRegistry[ID]
         else:
-            self.indicatorsregistry[ID] = indicatorsregistry(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
-            return self.indicatorsregistry[ID]
+            self.indicatorsRegistry[ID] = Indicator(ID, frequency, freqDesc, geogLocation, indicatorGroup, unit)
+            return self.indicatorsRegistry[ID]
 
     def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, commodity:Commodity, indicator:Indicator) -> Measurement:
-        if ID in self.measurementsTypeRegistry.keys():
-            return self.measurementsTypeRegistry[ID]
-        else:
-            self.measurementsTypeRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
-            return self.measurementsTypeRegistry[ID]
+       self.measurementsRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
+       return self.measurementsRegistry[ID]
 
         
 fcf = FoodCropFactory()        
