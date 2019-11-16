@@ -111,6 +111,13 @@ class FoodCropFactory :
         self.unitsRegistry = dict()
         self.measurementsRegistry = dict()
         
+    def affiche(self):
+        print(len(self.commodityRegistry))
+        print(len(self.indicatorsRegistry))
+        print(len(self.unitsRegistry))
+        print(len(self.measurementsRegistry))
+        
+        
     def createVolume(self,ID: int) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
@@ -125,11 +132,11 @@ class FoodCropFactory :
             self.unitsRegistry[ID] = Price(ID)
             return self.unitsRegistry[ID]
 
-    def createWeight(self,ID: int, weight:float) -> Unit:
+    def createWeight(self,ID: int, mult:float) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
         else:
-            self.unitsRegistry[ID] = Weight(ID, weight)
+            self.unitsRegistry[ID] = Weight(ID, mult)
             return self.unitsRegistry[ID]
             
     def createSurface(self, ID:int) -> Unit:
@@ -177,10 +184,7 @@ class FoodCropFactory :
 
     def createMeasurement(self, ID:int, year:int, value:float, timeperiodId:int, timeperiodDesc:str, commodity:Commodity, indicator:Indicator) -> Measurement:
        self.measurementsRegistry[ID] = Measurement(ID, year, value, timeperiodId, timeperiodDesc, commodity, indicator)
-       return self.measurementsRegistry[ID]
-
-        
-fcf = FoodCropFactory()        
+       return self.measurementsRegistry[ID]     
 
     
 class FoodCropsDataset :
@@ -214,11 +218,16 @@ class FoodCropsDataset :
             if name_u in price :
                 unit = fcf.createPrice(id_u)
             if name_u in weight :
-                unit = fcf.createWeight(id_u, 5)
+                mult = 0
+                if (name_u == "1,000 metric tons" or name_u == "1,000 tons"): 
+                    mult = 1000
+                if (name_u == "Million metric tons"):
+                    mult = 1000000
+                unit = fcf.createWeight(id_u, mult)
             if name_u in surface :
                 unit = fcf.createSurface(id_u)
             if name_u in count :
-                unit = fcf.createCount(id_u, "d")
+                unit = fcf.createCount(id_u, name_u)
             if name_u in ratio :
                 unit = fcf.createRatio(id_u)
                 
@@ -243,15 +252,17 @@ class FoodCropsDataset :
             tp_id = row["Timeperiod_ID"]
             tp_d = row["Timeperiod_Desc"]
             fcf.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
+        
             
             
                 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         pass
-
+        
+fcf = FoodCropFactory()   
 FCD = FoodCropsDataset()
 FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains.csv")
-
+fcf.affiche()
     
 
     
