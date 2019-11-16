@@ -3,6 +3,10 @@ from enum import Enum
 from typing import List
 import pandas as pd
 
+def intersection(lst1, lst2): 
+    lst3 = [value for value in lst1 if value in lst2] 
+    return lst3  
+
 class Describable(ABC):
     def __init__(self):
         super().__init__()
@@ -295,14 +299,29 @@ class FoodCropsDataset :
 
             a = self.indicatorGroupIndex[name_ig]
             self.indicatorGroupIndex[name_ig] = a + [measurement]
-            
-                
+               
+
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
-        pass
         
+        if commodityGroup == None and indicatorGroup == None and geographicalLocation == None and unit == None :
+            print(self.factory.measurementsRegistry)
+
+        CG = self.commodityGroupIndex[commodityGroup]
+        IG = self.indicatorGroupIndex[indicatorGroup]
+        GL = self.geographicalLocationIndex[geographicalLocation]
+        U = self.unitIndex[unit]
+
+        print(intersection(intersection(CG, IG),intersection(GL,U)))
+        
+        
+
+
+
 fcf = FoodCropFactory()
 FCD = FoodCropsDataset(fcf)
 FCD.load(r"D:\Downloads\FeedGrains\FeedGrains.csv")
+
+findMeasurements()
 
     
 
