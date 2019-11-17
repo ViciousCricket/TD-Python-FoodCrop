@@ -321,8 +321,6 @@ fcf = FoodCropFactory()
 FCD = FoodCropsDataset(fcf)
 FCD.load(r"D:\Downloads\FeedGrains\FeedGrains.csv")
 
-findMeasurements()
-
     
 
     
