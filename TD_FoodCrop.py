@@ -69,7 +69,7 @@ class Indicator(Describable) :
         self.unit = unit
     
     def Describe(self) -> str :
-        res = "nom :" + str(self.indicatorGroup) + " unité :" + self.unit.Describe() + " fréquence :" + str(self.__frequency) + self.__frequencyDesc + " geolocalisation :" + self.__geogLocation
+        res = "index :" + str(self.indicatorGroup) + " unité :" + self.unit.Describe() + " fréquence :" + str(self.__frequency) + self.__frequencyDesc + " geolocalisation :" + self.__geogLocation
         return res
 
 class Measurement :
@@ -210,6 +210,7 @@ class FoodCropsDataset :
         self.indicatorGroupIndex = dict()
         self.geographicalLocationIndex = dict()
         self.unitIndex = dict()
+        self.measurementListe = []
         
     
     def load(self,datasetPath: str):
@@ -235,22 +236,22 @@ class FoodCropsDataset :
             id_u = row["SC_Unit_ID"]
             name_u = row["SC_Unit_Desc"]
             if name_u in volume :
-                unit = fcf.createVolume(id_u)
+                unit = self.factory.createVolume(id_u)
             if name_u in price :
-                unit = fcf.createPrice(id_u)
+                unit = self.factory.createPrice(id_u)
             if name_u in weight :
                 mult = 0
                 if (name_u == "1,000 metric tons" or name_u == "1,000 tons"): 
                     mult = 1000
                 if (name_u == "Million metric tons"):
                     mult = 1000000
-                unit = fcf.createWeight(id_u, mult)
+                unit = self.factory.createWeight(id_u, mult)
             if name_u in surface :
-                unit = fcf.createSurface(id_u)
+                unit = self.factory.createSurface(id_u)
             if name_u in count :
-                unit = fcf.createCount(id_u, name_u)
+                unit = self.factory.createCount(id_u, name_u)
             if name_u in ratio :
-                unit = fcf.createRatio(id_u)
+                unit = self.factory.createRatio(id_u)
                 
             
             
@@ -260,25 +261,25 @@ class FoodCropsDataset :
             geo_name = row["SC_GeographyIndented_Desc"]
             id_group_ind = row["SC_Group_ID"]
             name_ig = row["SC_Group_Desc"]
-            indicator = fcf.createIndicator(id_ind, id_freq, freq_name, geo_name, id_group_ind, unit)
+            indicator = self.factory.createIndicator(id_ind, id_freq, freq_name, geo_name, id_group_ind, unit)
             
             name_cg = row["SC_GroupCommod_Desc"]
             id_c = row["SC_Commodity_ID"]
             name_c = row["SC_Commodity_Desc"]
             for a in CommodityGroup :
                 if name_cg == a.value :
-                        commodity = fcf.createCommodity(a, id_c, name_c)
+                        commodity = self.factory.createCommodity(a, id_c, name_c)
             
             
             year = row["Year_ID"]
             value = row["Amount"]
             tp_id = row["Timeperiod_ID"]
             tp_d = row["Timeperiod_Desc"]
-            measurement = fcf.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
+            measurement = self.factory.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
 
             if geo_name not in self.geographicalLocationIndex.keys() :
                 self.geographicalLocationIndex[geo_name] = []
-
+                
             if name_u not in self.unitIndex.keys() :
                 self.unitIndex[name_u] = []
             
@@ -299,29 +300,41 @@ class FoodCropsDataset :
 
             a = self.indicatorGroupIndex[name_ig]
             self.indicatorGroupIndex[name_ig] = a + [measurement]
+            
+            self.measurementListe.append(measurement)
                
 
     def findMeasurements(self, commodityGroup:CommodityGroup = None, indicatorGroup:IndicatorGroup = None, geographicalLocation:str = None, unit:Unit = None) -> List[Measurement]:
         
-        if commodityGroup == None and indicatorGroup == None and geographicalLocation == None and unit == None :
-            print(self.factory.measurementsRegistry)
+        if commodityGroup == None :
+            CG = self.measurementListe
+        else :
+            CG = self.commodityGroupIndex[commodityGroup.value]
 
-        CG = self.commodityGroupIndex[commodityGroup]
-        IG = self.indicatorGroupIndex[indicatorGroup]
-        GL = self.geographicalLocationIndex[geographicalLocation]
-        U = self.unitIndex[unit]
-
-        print(intersection(intersection(CG, IG),intersection(GL,U)))
+            
+        if indicatorGroup == None :
+            IG = self.measurementListe
+        else :
+            IG = self.indicatorGroupIndex[indicatorGroup.value]
         
         
-
-
+        if geographicalLocation == None :
+            GL = self.measurementListe
+        else :
+            GL = self.geographicalLocationIndex[geographicalLocation]
+        
+        if unit == None :
+            U = self.measurementListe
+        else :
+            U = self.unitIndex[unit]
+        res = intersection(intersection(CG, IG),intersection(GL,U))
+        
+        for i in res :
+            print(i.Describe()+"\n"+"\n")
+        
+        
 
 fcf = FoodCropFactory()
 FCD = FoodCropsDataset(fcf)
-FCD.load(r"D:\Downloads\FeedGrains\FeedGrains.csv")
-
-    
-
-    
-
+FCD.load(r"C:\Users\hello\Documents\documents_scolaires\MINES_ALES_2A\S7\2IA\python\FeedGrains_complet.csv")
+FCD.findMeasurements(CommodityGroup.COARSE_GRAINS, IndicatorGroup.QUANTITIES_FED, "United States", "Dollars per bushel")
