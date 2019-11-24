@@ -3,6 +3,7 @@ from enum import Enum
 from typing import List
 import pandas as pd
 
+# Fonction qui nous permet de réaliser l'intersection de deux listes, qui nous servira pour la méthode de recherche
 def intersection(lst1, lst2): 
     lst3 = [value for value in lst1 if value in lst2] 
     return lst3  
@@ -132,7 +133,7 @@ class FoodCropFactory :
         print(len(self.measurementsRegistry))
         print(self.measurementsRegistry[2].Describe())
         
-        
+        #Toutes les méthodes create suivent le même principe : on vérifie que l'ID est bien dans le dictionnaire, sinon on la rajoute
     def createVolume(self,ID: int) -> Unit:
         if ID in self.unitsRegistry.keys():
             return self.unitsRegistry[ID]
@@ -212,7 +213,7 @@ class FoodCropsDataset :
         self.unitIndex = dict()
         self.measurementListe = []
         
-    
+    #Initialisation du fichier et récupération des mesures (measurements)
     def load(self,datasetPath: str):
         
         dataframe = pd.read_csv(datasetPath)
@@ -225,14 +226,7 @@ class FoodCropsDataset :
         ratio = ["Bushels per acre","Metric tons per hectare","Cents per pound","Dollars per cwt","Dollars per short ton","Ratio","Dollars per bushel","Dollars per ton","Tons per acre"]
         
         for index, row in dataframe.iterrows():
-
-#            name_u = row["SC_GeographyIndented_Desc"]
-#            if name_u not in liste :
-#                liste.append(name_u)
-#                print (name_u)
-#            print(liste)
             
-        
             id_u = row["SC_Unit_ID"]
             name_u = row["SC_Unit_Desc"]
             if name_u in volume :
@@ -277,6 +271,7 @@ class FoodCropsDataset :
             tp_d = row["Timeperiod_Desc"]
             measurement = self.factory.createMeasurement(index, year, value, tp_id, tp_d, commodity, indicator)
 
+            #Création des dictionnaires de mesures pour faciliter la recherche
             if geo_name not in self.geographicalLocationIndex.keys() :
                 self.geographicalLocationIndex[geo_name] = []
                 
